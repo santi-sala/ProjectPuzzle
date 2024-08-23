@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridGenerator : MonoBehaviour
+public class PuzzleGenerator : MonoBehaviour
 {
     [Header("Elements")]
-    [SerializeField] private GameObject _spherePrefab;
+    [SerializeField] private PuzzlePiece _puzzlePiecePrefab;
 
     [Header("Settings")]
     [SerializeField] private int _gridSize;
@@ -30,15 +30,13 @@ public class GridGenerator : MonoBehaviour
             {
                 //Vector3 spawnPosition = startPosition + (Vector3.right * x + Vector3.up * y) * _gridScale;
                 Vector3 spawnPosition = startPosition + new Vector3(x,y) * _gridScale;
-                GameObject sphereInstance = Instantiate(_spherePrefab, spawnPosition, Quaternion.identity, this.transform);
+                PuzzlePiece puzzlePieceInstance = Instantiate(_puzzlePiecePrefab, spawnPosition, Quaternion.identity, this.transform);
 
-                sphereInstance.transform.localScale = Vector3.one * _gridScale;
 
                 Vector2 tiling = new Vector2(1f / _gridSize, 1f / _gridSize);
                 Vector2 offset = new Vector2((float)x / _gridSize, (float)y / _gridSize);
 
-                sphereInstance.GetComponent<MeshRenderer>().material.mainTextureScale = tiling;
-                sphereInstance.GetComponent<MeshRenderer>().material.mainTextureOffset = offset;
+               puzzlePieceInstance.Configure(_gridScale, tiling, offset);
             }
         }
 
