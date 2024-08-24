@@ -5,13 +5,22 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    enum State
+    {
+        None,
+        Puzzlepiece,
+        Camera
+    }
+    private State _state;
+
+
     [Header("Elements")]
     [SerializeField] private PuzzleController puzzleController;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        _state = State.None;
     }
 
     // Update is called once per frame
@@ -41,11 +50,25 @@ public class InputManager : MonoBehaviour
             case TouchPhase.Began:
                 if (puzzleController.SingleTouchBeganCallback(worldTouchPosition))
                 {
+                    _state = State.Puzzlepiece;
+                    return;
                 }
                 break;
             case TouchPhase.Moved:
+                if (_state == State.Puzzlepiece)
+                {
+                    puzzleController.SingleTouchDrag(worldTouchPosition);
+                }
+                else if (_state == State.Camera)
+                {
+                    // Move Camera
+                }
                 break;
             case TouchPhase.Stationary:
+                if(_state == State.Puzzlepiece)
+                {
+                    puzzleController.SingleTouchDrag(worldTouchPosition);
+                }
                 break;
             case TouchPhase.Ended:
                 break;

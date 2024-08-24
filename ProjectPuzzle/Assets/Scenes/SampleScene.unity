@@ -379,6 +379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 347f609f12d89e145a929f45727cd7b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _puzzleController: {fileID: 1109864216}
   _puzzlePiecePrefab: {fileID: 3507057476500926773, guid: 0192d87b9b000474b9c69dcd5f5ae44c, type: 3}
   _gridSize: 5
   _gridScale: 0.75
@@ -443,8 +444,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  orthographic: 1
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -733,6 +734,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cf752991b118bb4fbf6248285ddfe1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  puzzleController: {fileID: 1109864216}
 --- !u!1 &1815487424
 GameObject:
   m_ObjectHideFlags: 0

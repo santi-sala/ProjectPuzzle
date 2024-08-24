@@ -11,6 +11,10 @@ public class PuzzleController : MonoBehaviour
     [Header("Settings")]
     private float _detectionRadius;
 
+    [Header("Piece movement")]
+    private Vector3 _clickedPosition;
+    private PuzzlePiece _currentPiece;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,15 +35,16 @@ public class PuzzleController : MonoBehaviour
     public bool SingleTouchBeganCallback(Vector3 worldPosition)
     {
         PuzzlePiece[] puzzlePieces = _puzzleGenerator.GetPuzzlePieces();
-        PuzzlePiece closestPuzzlePiece = GetClosestPuzzlePiece(worldPosition, puzzlePieces);
+        _currentPiece = GetClosestPuzzlePiece(worldPosition, puzzlePieces);
 
-        if (closestPuzzlePiece == null)
+        if (_currentPiece == null)
         {
             return false;
         }
-        //closestPuzzlePiece.transform.position += Vector3.up;
-        closestPuzzlePiece.gameObject.SetActive(false);
-        //Destroy(closestPuzzlePiece.gameObject);
+
+        _clickedPosition = worldPosition;
+
+        _currentPiece.StartMoving();
         return true;
     }
 
@@ -70,5 +75,15 @@ public class PuzzleController : MonoBehaviour
         }
 
         return puzzlePieces[closestIndex];
+    }
+
+    public void SingleTouchDrag(Vector3 worldTouchPosition)
+    {
+        Vector3 moveDelta = worldTouchPosition - _clickedPosition;
+
+        if (_currentPiece != null)
+        {
+            _currentPiece.Move(moveDelta);
+        }
     }
 }
