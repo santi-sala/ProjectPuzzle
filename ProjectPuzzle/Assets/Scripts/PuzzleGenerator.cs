@@ -6,6 +6,7 @@ using UnityEngine;
 public class PuzzleGenerator : MonoBehaviour
 {
     [Header("Elements")]
+    [SerializeField] private PuzzleController _puzzleController;
     [SerializeField] private PuzzlePiece _puzzlePiecePrefab;
 
     [Header("Settings")]
@@ -14,6 +15,7 @@ public class PuzzleGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _puzzleController.Configure(_gridScale);
         GenerateGrid();
     }
 
