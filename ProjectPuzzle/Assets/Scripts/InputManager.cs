@@ -32,6 +32,7 @@ public class InputManager : MonoBehaviour
     {
         Vector2 touchPosition = Input.GetTouch(0).position;
         Vector3 worldTouchPosition = Camera.main.ScreenToWorldPoint(touchPosition);
+        worldTouchPosition.z = 0;
 
         TouchPhase touchPhase = Input.touches[0].phase;
 

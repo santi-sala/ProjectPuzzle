@@ -12,15 +12,18 @@ public class PuzzleGenerator : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private int _gridSize;
     [SerializeField] private float _gridScale;
+    private List<PuzzlePiece> _puzzlePieces = new List<PuzzlePiece>();
     // Start is called before the first frame update
     void Start()
     {
-        _puzzleController.Configure(_gridScale);
+        _puzzleController.Configure(this ,_gridScale);
         GenerateGrid();
     }
 
     private void GenerateGrid()
     {
+        _puzzlePieces.Clear();
+
         Vector3 startPosition = Vector2.left * _gridScale * _gridSize / 2 + Vector2.down * _gridScale * _gridSize / 2;
 
         startPosition.x += _gridScale / 2;
@@ -34,6 +37,7 @@ public class PuzzleGenerator : MonoBehaviour
                 Vector3 spawnPosition = startPosition + new Vector3(x,y) * _gridScale;
                 PuzzlePiece puzzlePieceInstance = Instantiate(_puzzlePiecePrefab, spawnPosition, Quaternion.identity, this.transform);
 
+                _puzzlePieces.Add(puzzlePieceInstance);
 
                 Vector2 tiling = new Vector2(1f / _gridSize, 1f / _gridSize);
                 Vector2 offset = new Vector2((float)x / _gridSize, (float)y / _gridSize);
@@ -42,6 +46,11 @@ public class PuzzleGenerator : MonoBehaviour
             }
         }
 
+    }
+
+    public PuzzlePiece[] GetPuzzlePieces()
+    {
+        return _puzzlePieces.ToArray();
     }
 
 }
