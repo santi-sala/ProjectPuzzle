@@ -14,8 +14,6 @@ public class PuzzleGenerator : MonoBehaviour
     [SerializeField] private float _gridScale;
     private List<PuzzlePiece> _puzzlePieces = new List<PuzzlePiece>();
 
-    [Header("Z sorting")]
-    [SerializeField] private float _puzzlePieceZOffset;
 
     // Start is called before the first frame update
     void Start()
@@ -40,7 +38,7 @@ public class PuzzleGenerator : MonoBehaviour
                 //Vector3 spawnPosition = startPosition + (Vector3.right * x + Vector3.up * y) * _gridScale;
                 Vector3 spawnPosition = startPosition + new Vector3(x,y) * _gridScale;
 
-                spawnPosition.z -= _puzzlePieceZOffset * GridIndexFromposition(x, y);
+                spawnPosition.z -= Constants.PIECE_Z_OFFSET * GridIndexFromposition(x, y);
 
                 PuzzlePiece puzzlePieceInstance = Instantiate(_puzzlePiecePrefab, spawnPosition, Quaternion.identity, this.transform);
 

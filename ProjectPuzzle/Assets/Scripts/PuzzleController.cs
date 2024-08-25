@@ -42,10 +42,33 @@ public class PuzzleController : MonoBehaviour
             return false;
         }
 
+        ManagePiecesOrder(puzzlePieces);
+
         _clickedPosition = worldPosition;
 
         _currentPiece.StartMoving();
         return true;
+    }
+
+    private void ManagePiecesOrder(PuzzlePiece[] puzzlePieces)
+    {
+        float highestZ = puzzlePieces.Length * Constants.PIECE_Z_OFFSET;
+        float currentPieceZ = _currentPiece.transform.position.z;
+
+        _currentPiece.transform.position = new Vector3(_currentPiece.transform.position.x, _currentPiece.transform.position.y, -highestZ);
+
+        for (int i = 0; i < puzzlePieces.Length; i++)
+        {
+            if (puzzlePieces[i] == _currentPiece)
+            {
+                continue;
+            }
+
+            if (puzzlePieces[i].transform.position.z < currentPieceZ)
+            {
+                puzzlePieces[i].transform.position += Vector3.forward * Constants.PIECE_Z_OFFSET;
+            }
+        }
     }
 
     private PuzzlePiece GetClosestPuzzlePiece(Vector3 worldPosition, PuzzlePiece[] puzzlePieces)
@@ -55,7 +78,7 @@ public class PuzzleController : MonoBehaviour
 
         for (int i = 0; i < puzzlePieces.Length; i++)
         {
-            float distance = Vector3.Distance(worldPosition, puzzlePieces[i].transform.position);
+            float distance = Vector3.Distance(worldPosition, (Vector2)puzzlePieces[i].transform.position);
 
             if (distance > _detectionRadius)
             {
