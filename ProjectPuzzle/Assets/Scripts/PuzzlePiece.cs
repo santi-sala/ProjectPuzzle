@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PuzzlePiece : MonoBehaviour
+public class PuzzlePiece : MonoBehaviour, IComparable<PuzzlePiece>
 {
     [Header("Elements")]
     [SerializeField] private Renderer _renderer;
@@ -33,5 +33,10 @@ public class PuzzlePiece : MonoBehaviour
     public void StopMoving() 
     {
 
+    }
+
+    public int CompareTo(PuzzlePiece otherPiece)
+    {
+        return transform.position.z.CompareTo(otherPiece.transform.position.z);
     }
 }

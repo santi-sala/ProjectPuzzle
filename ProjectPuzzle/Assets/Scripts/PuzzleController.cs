@@ -29,13 +29,13 @@ public class PuzzleController : MonoBehaviour
     public void Configure(PuzzleGenerator puzzleGenerator, float gridScale)
     {
         _puzzleGenerator = puzzleGenerator;
-        _detectionRadius = gridScale * 1.5f;
+        _detectionRadius = gridScale / 3f * 1.5f;
     }
 
     public bool SingleTouchBeganCallback(Vector3 worldPosition)
     {
         PuzzlePiece[] puzzlePieces = _puzzleGenerator.GetPuzzlePieces();
-        _currentPiece = GetClosestPuzzlePiece(worldPosition, puzzlePieces);
+        _currentPiece = GetTopClosestPiece(puzzlePieces, worldPosition);
 
         if (_currentPiece == null)
         {
@@ -70,6 +70,35 @@ public class PuzzleController : MonoBehaviour
             }
         }
     }
+    private PuzzlePiece GetTopClosestPiece(PuzzlePiece[] puzzlePieces, Vector3 worldPosition)
+    {
+        // Creating a list of the pieces within the detection radius
+        List<PuzzlePiece> potentialPieces = new List<PuzzlePiece>();
+
+        for (int i = 0; i < puzzlePieces.Length; i++)
+        {
+            float distance = Vector3.Distance(worldPosition, (Vector2)puzzlePieces[i].transform.position);
+
+            if (distance > _detectionRadius)
+            {
+                continue;
+            }
+
+            potentialPieces.Add(puzzlePieces[i]);
+        }
+
+        // Sorting the list by the z position of the pieces
+        if (potentialPieces.Count <= 0)
+        {
+            return null;
+        }
+
+        //potentialPieces.Sort((x, y) => x.transform.position.z.CompareTo(y.transform.position.z));
+        potentialPieces.Sort();
+
+        return potentialPieces[0];
+    }
+
 
     private PuzzlePiece GetClosestPuzzlePiece(Vector3 worldPosition, PuzzlePiece[] puzzlePieces)
     {
