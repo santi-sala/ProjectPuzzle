@@ -383,6 +383,7 @@ MonoBehaviour:
   _puzzlePiecePrefab: {fileID: 3507057476500926773, guid: 0192d87b9b000474b9c69dcd5f5ae44c, type: 3}
   _gridSize: 5
   _gridScale: 0.75
+  _puzzlePieceZOffset: 0.001
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
