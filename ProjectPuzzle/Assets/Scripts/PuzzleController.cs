@@ -77,6 +77,11 @@ public class PuzzleController : MonoBehaviour
 
         for (int i = 0; i < puzzlePieces.Length; i++)
         {
+            if (puzzlePieces[i].PieceIsInValidPosition)
+            {
+                continue;
+            }
+
             float distance = Vector3.Distance(worldPosition, (Vector2)puzzlePieces[i].transform.position);
 
             if (distance > _detectionRadius)
@@ -99,36 +104,6 @@ public class PuzzleController : MonoBehaviour
         return potentialPieces[0];
     }
 
-
-    private PuzzlePiece GetClosestPuzzlePiece(Vector3 worldPosition, PuzzlePiece[] puzzlePieces)
-    {
-        float minDistance = float.MaxValue;
-        int closestIndex = -1;
-
-        for (int i = 0; i < puzzlePieces.Length; i++)
-        {
-            float distance = Vector3.Distance(worldPosition, (Vector2)puzzlePieces[i].transform.position);
-
-            if (distance > _detectionRadius)
-            {
-                continue;
-            }
-
-            if (distance < minDistance)
-            {
-                minDistance = distance;
-                closestIndex = i;
-            }
-        }
-
-        if (closestIndex < 0)
-        {
-            return null;
-        }
-
-        return puzzlePieces[closestIndex];
-    }
-
     public void SingleTouchDrag(Vector3 worldTouchPosition)
     {
         Vector3 moveDelta = worldTouchPosition - _clickedPosition;
@@ -137,5 +112,15 @@ public class PuzzleController : MonoBehaviour
         {
             _currentPiece.Move(moveDelta);
         }
+    }
+
+    internal void SingleTouchEndedCallback()
+    {
+        if (_currentPiece == null)
+        {
+            return;
+        }
+        _currentPiece.StopMoving();
+        _currentPiece = null;
     }
 }

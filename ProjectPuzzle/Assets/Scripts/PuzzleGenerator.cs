@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PuzzleGenerator : MonoBehaviour
 {
@@ -36,18 +38,20 @@ public class PuzzleGenerator : MonoBehaviour
             for (int y = 0; y < _gridSize; y++)
             {
                 //Vector3 spawnPosition = startPosition + (Vector3.right * x + Vector3.up * y) * _gridScale;
-                Vector3 spawnPosition = startPosition + new Vector3(x,y) * _gridScale;
+                Vector3 correctSpawnPosition = startPosition + new Vector3(x,y) * _gridScale;
+                correctSpawnPosition.z -= Constants.PIECE_Z_OFFSET * GridIndexFromposition(x, y);
 
-                spawnPosition.z -= Constants.PIECE_Z_OFFSET * GridIndexFromposition(x, y);
+                Vector3 randomPosition = Random.onUnitSphere * 2f;
+                randomPosition.z = correctSpawnPosition.z;
 
-                PuzzlePiece puzzlePieceInstance = Instantiate(_puzzlePiecePrefab, spawnPosition, Quaternion.identity, this.transform);
+                PuzzlePiece puzzlePieceInstance = Instantiate(_puzzlePiecePrefab, randomPosition, Quaternion.identity, this.transform);
 
                 _puzzlePieces.Add(puzzlePieceInstance);
 
                 Vector2 tiling = new Vector2(1f / _gridSize, 1f / _gridSize);
                 Vector2 offset = new Vector2((float)x / _gridSize, (float)y / _gridSize);
 
-               puzzlePieceInstance.Configure(_gridScale, tiling, offset);
+               puzzlePieceInstance.Configure(_gridScale, tiling, offset, correctSpawnPosition);
             }
         }
     }

@@ -71,6 +71,10 @@ public class InputManager : MonoBehaviour
                 }
                 break;
             case TouchPhase.Ended:
+                if (_state == State.Puzzlepiece)
+                {
+                    puzzleController.SingleTouchEndedCallback();
+                }
                 break;
             case TouchPhase.Canceled:
                 break;

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PuzzlePiece : MonoBehaviour, IComparable<PuzzlePiece>
 {
@@ -10,12 +11,18 @@ public class PuzzlePiece : MonoBehaviour, IComparable<PuzzlePiece>
 
     [Header("Movement")]
     private Vector3 _startMovePosition;
-    public void Configure(float scale, Vector2 tilling, Vector2 offset)
+
+    [Header("Validation")]
+    private Vector3 _correctPosition;
+    public bool PieceIsInValidPosition { get; private set; }
+    public void Configure(float scale, Vector2 tilling, Vector2 offset, Vector3 correctPosition)
     {
         this.transform.localScale = Vector3.one * scale;
 
         _renderer.material.mainTextureScale = tilling;
         _renderer.material.mainTextureOffset = offset;
+
+        _correctPosition = correctPosition;
     }
 
     public void StartMoving()
@@ -32,7 +39,36 @@ public class PuzzlePiece : MonoBehaviour, IComparable<PuzzlePiece>
 
     public void StopMoving() 
     {
+        CheckForValidation();
+    }
 
+    private void CheckForValidation()
+    {
+        if (PieceIsCloseToCorrectPosition())
+        {
+            ValidatePiece();
+        }
+    }
+
+
+    private bool PieceIsCloseToCorrectPosition()
+    {
+        return Vector3.Distance((Vector2)transform.position, (Vector2)_correctPosition) < GetMinimumValidDistance();
+    }
+
+    private float GetMinimumValidDistance()
+    {
+        return Mathf.Max(0.05f, transform.localScale.x / 5);
+    }
+
+    private void ValidatePiece()
+    {
+        _correctPosition.z = 0;
+        transform.position = _correctPosition;
+
+        PieceIsInValidPosition = true;
+
+        Debug.LogWarning("Piece placed correctly: " + name);
     }
 
     public int CompareTo(PuzzlePiece otherPiece)
