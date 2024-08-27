@@ -15,7 +15,8 @@ public class InputManager : MonoBehaviour
 
 
     [Header("Elements")]
-    [SerializeField] private PuzzleController puzzleController;
+    [SerializeField] private PuzzleController _puzzleController;
+    [SerializeField] private CameraController _cameraController;
 
     // Start is called before the first frame update
     void Start()
@@ -48,32 +49,40 @@ public class InputManager : MonoBehaviour
         switch (touchPhase)
         {
             case TouchPhase.Began:
-                if (puzzleController.SingleTouchBeganCallback(worldTouchPosition))
+                if (_puzzleController.SingleTouchBeganCallback(worldTouchPosition))
                 {
                     _state = State.Puzzlepiece;
-                    return;
+                }
+                else
+                {
+                    _cameraController.SingleTouchBeganCallback(touchPosition);
+                    _state = State.Camera;
                 }
                 break;
             case TouchPhase.Moved:
                 if (_state == State.Puzzlepiece)
                 {
-                    puzzleController.SingleTouchDrag(worldTouchPosition);
+                    _puzzleController.SingleTouchDrag(worldTouchPosition);
                 }
                 else if (_state == State.Camera)
                 {
-                    // Move Camera
+                    _cameraController.SingleTouchDrag(touchPosition);
                 }
                 break;
             case TouchPhase.Stationary:
                 if(_state == State.Puzzlepiece)
                 {
-                    puzzleController.SingleTouchDrag(worldTouchPosition);
+                    _puzzleController.SingleTouchDrag(worldTouchPosition);
+                }
+                else if (_state == State.Camera)
+                {
+                    _cameraController.SingleTouchDrag(touchPosition);
                 }
                 break;
             case TouchPhase.Ended:
                 if (_state == State.Puzzlepiece)
                 {
-                    puzzleController.SingleTouchEndedCallback();
+                    _puzzleController.SingleTouchEndedCallback();
                 }
                 break;
             case TouchPhase.Canceled:
