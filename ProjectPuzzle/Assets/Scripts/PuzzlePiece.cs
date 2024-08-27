@@ -14,6 +14,9 @@ public class PuzzlePiece : MonoBehaviour, IComparable<PuzzlePiece>
 
     [Header("Validation")]
     private Vector3 _correctPosition;
+
+    [Header("Neighbors")]
+    private PuzzlePiece[] _neighbours;
     public bool PieceIsInValidPosition { get; private set; }
     public void Configure(float scale, Vector2 tilling, Vector2 offset, Vector3 correctPosition)
     {
@@ -28,6 +31,14 @@ public class PuzzlePiece : MonoBehaviour, IComparable<PuzzlePiece>
     public void StartMoving()
     {
         _startMovePosition = transform.position;
+
+        foreach (PuzzlePiece piece in _neighbours)
+        {
+            if (piece != null)
+            {
+                Debug.Log("Neighbour: " + piece.name);
+            }
+        }
     }
 
     public void Move(Vector3 moveDelta)
@@ -39,15 +50,29 @@ public class PuzzlePiece : MonoBehaviour, IComparable<PuzzlePiece>
 
     public void StopMoving() 
     {
-        CheckForValidation();
+        bool isValid = CheckForValidation();
+
+        if(isValid)
+        {
+            return;
+        }
+
+        CheckForNeighbors();
     }
 
-    private void CheckForValidation()
+    private void CheckForNeighbors()
+    {
+    }
+
+    private bool CheckForValidation()
     {
         if (PieceIsCloseToCorrectPosition())
         {
             ValidatePiece();
+            return true;
         }
+
+        return false;
     }
 
 
@@ -74,5 +99,10 @@ public class PuzzlePiece : MonoBehaviour, IComparable<PuzzlePiece>
     public int CompareTo(PuzzlePiece otherPiece)
     {
         return transform.position.z.CompareTo(otherPiece.transform.position.z);
+    }
+
+    internal void SetNeighbours(params PuzzlePiece[] puzzlePieces)
+    {
+        _neighbours = puzzlePieces;
     }
 }

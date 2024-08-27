@@ -57,12 +57,50 @@ public class PuzzleGenerator : MonoBehaviour
                puzzlePieceInstance.Configure(_gridScale, tiling, offset, correctSpawnPosition);
             }
         }
+
+        ConfigureNeighbours();
+    }
+
+    private void ConfigureNeighbours()
+    {
+        for (int i = 0; i < _puzzlePieces.Count; i++)
+        {
+            ConfigurePuzzlePieceNeighbours(_puzzlePieces[i], i);
+        }
+    }
+
+    private void ConfigurePuzzlePieceNeighbours(PuzzlePiece puzzlePiece, int index)
+    {
+        Vector2Int gridPosition = IndexToGridPosition(index);
+        int x = gridPosition.x;
+        int y = gridPosition.y;
+
+        PuzzlePiece rightPiece = IsValidGridPosition(x + 1, y) ? transform.GetChild(GridIndexFromposition(x + 1, y)).GetComponent<PuzzlePiece>() : null;
+        PuzzlePiece bottomPiece = IsValidGridPosition(x, y -1) ? transform.GetChild(GridIndexFromposition(x, y - 1)).GetComponent<PuzzlePiece>() : null;
+        PuzzlePiece leftPiece = IsValidGridPosition(x - 1, y) ? transform.GetChild(GridIndexFromposition(x - 1, y)).GetComponent<PuzzlePiece>() : null;
+        PuzzlePiece topPiece = IsValidGridPosition(x, y + 1) ? transform.GetChild(GridIndexFromposition(x, y + 1)).GetComponent<PuzzlePiece>() : null;
+
+        puzzlePiece.SetNeighbours(rightPiece, bottomPiece, leftPiece, topPiece);
+    }
+
+    private bool IsValidGridPosition(int x, int y)
+    {
+        return x >= 0 && x < _gridSize && y >= 0 && y < _gridSize;
     }
 
     private int GridIndexFromposition(int x, int y)
     {
         return y + _gridSize * x;
     }
+
+    private Vector2Int IndexToGridPosition(int index)
+    {
+        int x = index / _gridSize;
+        int y = (int)(((float)index) % _gridSize);
+
+        return new Vector2Int(x, y);
+    }
+        
 
     public PuzzlePiece[] GetPuzzlePieces()
     {
