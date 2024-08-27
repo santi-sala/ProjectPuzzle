@@ -13,14 +13,17 @@ public class PuzzleGenerator : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private int _gridSize;
-    [SerializeField] private float _gridScale;
+     private float _gridScale;
     private List<PuzzlePiece> _puzzlePieces = new List<PuzzlePiece>();
 
 
     // Start is called before the first frame update
     void Start()
     {
+        _gridScale = Constants.PUZZLE_WORLD_SIZE / _gridSize;
+        
         _puzzleController.Configure(this ,_gridScale);
+
         GenerateGrid();
     }
 
